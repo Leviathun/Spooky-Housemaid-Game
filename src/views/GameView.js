@@ -2,8 +2,10 @@ export class GameView {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = 1800; // กำหนดขนาด Canvas
-        this.canvas.height = 800;
+        
+        // กำหนดขนาด Canvas
+        this.canvas.width = 800; 
+        this.canvas.height = 600;
     }
 
     clearCanvas() {
@@ -11,7 +13,9 @@ export class GameView {
     }
 
     drawPlayer(player) {
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+        if (player) {
+            this.ctx.fillStyle = 'white'; // สีของตัวละคร
+            this.ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
     }
 }

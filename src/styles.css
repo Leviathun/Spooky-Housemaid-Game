@@ -9,5 +9,6 @@ body {
 
 #gameCanvas {
   border: 2px solid white;
+  display: block; /* ป้องกัน canvas ขยายเอง */
   background-color: #333;
 }
