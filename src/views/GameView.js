@@ -10,6 +10,14 @@ export class GameView {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    drawText(text, x, y, color = 'yellow', font = '16px Arial') {
+        this.ctx.fillStyle = color;
+        this.ctx.font = font;
+        this.ctx.textAlign = 'center'; 
+        this.ctx.fillText(text, x, y);
+    }
+    
+    
     drawPlayer(player) {
         if (player) {
             this.ctx.fillStyle = 'white';

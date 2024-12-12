@@ -10,6 +10,8 @@ export class GameController {
         this.inputController = new InputController();
         this.furnitureList = [];
         this.isCleaning = false;
+        this.startTime = Date.now(); // เวลาเริ่มต้นเกม
+        this.elapsedTime = 0; // เวลาเริ่มต้น
 
         // สร้างเฟอร์นิเจอร์
         this.furnitureList.push(new Furniture(200, 300, 100, 50));
@@ -78,13 +80,31 @@ export class GameController {
         }
     }
 
-    gameLoop() {
-        this.handlePlayerActions();
-        
-        this.gameView.clearCanvas();  // ลบ Canvas
-        this.gameView.drawPlayer(this.player);  // วาดผู้เล่น
-        this.gameView.drawFurniture(this.furnitureList);  // วาดเฟอร์นิเจอร์
-
-        requestAnimationFrame(() => this.gameLoop());  // เรียกวนซ้ำ
+    formatTime(milliseconds) {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
+        return `${minutes}:${seconds}`;
     }
+    
+    gameLoop() {
+        const now = Date.now();
+        this.elapsedTime = now - this.startTime;
+    
+        // จัดการฟังก์ชันอื่น ๆ
+        this.handlePlayerActions();
+        this.gameView.clearCanvas();
+        this.gameView.drawPlayer(this.player);
+        this.gameView.drawFurniture(this.furnitureList);
+    
+        // วาดเวลา
+        const formattedTime = this.formatTime(this.elapsedTime);
+        this.gameView.drawText(`Time: ${formattedTime}`, 10, 20, 'white', '18px Arial');
+    
+        // อัปเดตสถานะของเฟอร์นิเจอร์
+        this.furnitureList.forEach(furniture => furniture.update(this.gameView));
+    
+        requestAnimationFrame(() => this.gameLoop());
+    }
+    
 }
