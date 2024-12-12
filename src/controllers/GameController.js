@@ -1,86 +1,90 @@
-import { GameView } from '../views/GameView.js';  // นำเข้า GameView.js
-import { Player } from '../models/Player.js';  // นำเข้า Player.js
+import { GameView } from '../views/GameView.js';
+import { Player } from '../models/Player.js';
 import { Furniture } from '../models/Furniture.js';
+import { InputController } from '../controllers/InputController.js';
 
 export class GameController {
     constructor() {
-        this.gameView = new GameView(); // สร้าง instance ของ GameView
-        this.player = new Player(); // สร้าง instance ของ Player
-        this.furnitureList = []; // สร้างรายการเฟอร์นิเจอร์
-        this.keys = {}; // เก็บสถานะของปุ่มที่ถูกกด
+        this.gameView = new GameView();
+        this.player = new Player();
+        this.inputController = new InputController();
+        this.furnitureList = [];
         this.isCleaning = false;
 
         // สร้างเฟอร์นิเจอร์
-        this.furnitureList.push(new Furniture(200, 300, 100, 50)); // เพิ่มเฟอร์นิเจอร์ที่ตำแหน่ง (200, 300)
-        this.furnitureList.push(new Furniture(400, 300, 100, 50)); // เพิ่มเฟอร์นิเจอร์ที่ตำแหน่ง (400, 300)
+        this.furnitureList.push(new Furniture(200, 300, 100, 50));
+        this.furnitureList.push(new Furniture(400, 300, 100, 50));
 
-        this.addEventListeners(); // เพิ่ม Event listeners
+        // ส่งข้อมูลเฟอร์นิเจอร์ไปที่ GameView
+        this.gameView.furnitureList = this.furnitureList;
+
+        this.addEventListeners()
     }
 
-    // ฟังก์ชันที่ใช้เริ่มเกม
     startGame() {
-        // เริ่มเกมที่นี่ (อาจจะตั้งค่าเริ่มต้นหรือการตั้งค่าพิเศษที่ต้องการ)
         console.log("Game Started");
-        this.gameLoop(); // เรียกเกมลูป
+        this.gameLoop();
     }
 
     addEventListeners() {
-        window.addEventListener('keydown', (e) => {
-            this.keys[e.key] = true;
-        });
-
-        window.addEventListener('keyup', (e) => {
-            this.keys[e.key] = false;
-        });
-
-        this.gameView.canvas.addEventListener('mousedown', () => {
-            this.isCleaning = true;
+        this.gameView.canvas.addEventListener('mousedown', (e) => {
+            if (e.button === 0) { // คลิกซ้าย
+                this.isCleaning = true;
+            } else if (e.button === 2) { // คลิกขวา
+                this.isCleaning = false;
+                this.handleRightClick(e); // ฟังก์ชันทำความสะอาดเมื่อคลิกขวา
+            }
         });
 
         this.gameView.canvas.addEventListener('mouseup', () => {
-            this.isCleaning = false;
+            this.isCleaning = false;  // หยุดทำความสะอาดเมื่อปล่อย
         });
     }
 
-    handlePlayerMovement() {
-        if (this.keys['a'] || this.keys['A']) {
-            this.player.moveLeft();
-        }
-        if (this.keys['d'] || this.keys['D']) {
-            this.player.moveRight();
-        }
+    handleCleaning(event) {
+        const mouseX = event.clientX - this.gameView.canvas.offsetLeft;
+        const mouseY = event.clientY - this.gameView.canvas.offsetTop;
+
+        // ตรวจสอบว่าเฟอร์นิเจอร์ตัวไหนอยู่ใกล้คลิก
+        this.furnitureList.forEach(furniture => {
+            if (mouseX >= furniture.x && mouseX <= furniture.x + furniture.width &&
+                mouseY >= furniture.y && mouseY <= furniture.y + furniture.height) {
+                    furniture.clean();  // ทำความสะอาดเฟอร์นิเจอร์
+                }
+        });
     }
 
     handlePlayerActions() {
-        if (this.keys['e'] || this.keys['E']) {
-            this.player.toggleHiding();
+        // ตรวจสอบการเคลื่อนที่ (ใช้ inputController)
+        if (this.inputController.isKeyPressed('a') && this.player.x > 0) {  // เคลื่อนที่ไปทางซ้าย
+            this.player.x -= 5; // เคลื่อนที่ซ้าย
         }
-
+        if (this.inputController.isKeyPressed('d') && this.player.x + this.player.width < this.gameView.canvas.width) {  // เคลื่อนที่ไปทางขวา
+            this.player.x += 5; // เคลื่อนที่ขวา
+        }
+    
+        // ตรวจสอบการทำความสะอาด (ถ้ากดค้างเมาส์)
         if (this.isCleaning) {
-            // ตรวจสอบว่าเฟอร์นิเจอร์ตัวไหนอยู่ใกล้ผู้เล่น
             this.furnitureList.forEach(furniture => {
+                // ตรวจสอบว่าผู้เล่นอยู่ใกล้เฟอร์นิเจอร์หรือไม่
                 if (this.player.x < furniture.x + furniture.width &&
                     this.player.x + this.player.width > furniture.x &&
                     this.player.y < furniture.y + furniture.height &&
                     this.player.y + this.player.height > furniture.y) {
-                        furniture.clean(); // ทำความสะอาดเฟอร์นิเจอร์
+                    // เริ่มทำความสะอาดเฟอร์นิเจอร์
+                    furniture.clean();
                 }
             });
         }
     }
 
     gameLoop() {
-        this.handlePlayerMovement(); // จัดการการเคลื่อนที่
-        this.handlePlayerActions();  // จัดการการทำงาน
+        this.handlePlayerActions();
+        
+        this.gameView.clearCanvas();  // ลบ Canvas
+        this.gameView.drawPlayer(this.player);  // วาดผู้เล่น
+        this.gameView.drawFurniture(this.furnitureList);  // วาดเฟอร์นิเจอร์
 
-        this.gameView.clearCanvas(); // ลบ Canvas เดิม
-        this.gameView.drawPlayer(this.player); // วาดผู้เล่น
-
-        // วาดเฟอร์นิเจอร์
-        this.furnitureList.forEach(furniture => {
-            furniture.draw(this.gameView.ctx);
-        });
-
-        requestAnimationFrame(() => this.gameLoop()); // เรียกวนซ้ำ
+        requestAnimationFrame(() => this.gameLoop());  // เรียกวนซ้ำ
     }
 }

@@ -1,19 +1,21 @@
 export class InputController {
-    constructor(player) {
-        this.player = player;
-        this.bindEvents();
+    constructor() {
+        this.keys = {};
+        this.addEventListeners();
     }
 
-    bindEvents() {
-        document.addEventListener('keydown', (e) => {
-            switch (e.key) {
-                case 'a':
-                    this.player.moveLeft();
-                    break;
-                case 'd':
-                    this.player.moveRight();
-                    break;
-            }
+    addEventListeners() {
+        window.addEventListener('keydown', (e) => {
+            this.keys[e.key] = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            this.keys[e.key] = false;
         });
     }
+
+    isKeyPressed(key) {
+        return !!this.keys[key];
+    }
+
 }

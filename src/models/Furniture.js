@@ -5,20 +5,26 @@ export class Furniture {
         this.width = width;
         this.height = height;
         this.status = 'dirty'; // ตั้งสถานะเริ่มต้นเป็น dirty
-        this.cleanTime = 3; // เวลาที่ต้องใช้ในการทำความสะอาด (วินาที)
+        this.cleanTime = 100; // เวลาที่ต้องใช้ในการทำความสะอาด (วินาที)
+        
     }
 
-    // ฟังก์ชันที่ใช้ทำความสะอาด
     clean() {
-        if (this.status === 'dirty') {
-            this.status = 'plain';
-            this.cleanTime = 2; // เวลาที่ใช้ทำความสะอาดจะลดลง
-        } else if (this.status === 'plain') {
-            this.status = 'clean';
-            this.cleanTime = 1; // เวลาทำความสะอาดเสร็จ
+        if (this.status === 'dirty' || this.status === 'plain') {
+            this.cleanTime -= 0.1; // ลดเวลาในการทำความสะอาดทุกครั้งที่เกมลูป
+            console.log(this.cleanTime)
+            if (this.cleanTime <= 0) {
+                // เมื่อทำความสะอาดเสร็จ เปลี่ยนสถานะและรีเซ็ตเวลาทำความสะอาด
+                if (this.status === 'dirty') {
+                    this.status = 'plain'; 
+                    this.cleanTime = 80;  // เวลาใหม่สำหรับสถานะ plain
+                } else if (this.status === 'plain') {
+                    this.status = 'clean';
+                }
+            }
         }
     }
-
+    
     // ฟังก์ชันที่ใช้วาดเฟอร์นิเจอร์
     draw(ctx) {
         switch (this.status) {
