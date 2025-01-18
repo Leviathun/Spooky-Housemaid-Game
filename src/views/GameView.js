@@ -4,6 +4,7 @@ export class GameView {
         this.ctx = this.canvas.getContext('2d');
         this.canvas.width = 800;
         this.canvas.height = 600;
+        this.score = 0;
     }
 
     clearCanvas() {
@@ -16,7 +17,10 @@ export class GameView {
         this.ctx.textAlign = 'center'; 
         this.ctx.fillText(text, x, y);
     }
-    
+
+    updateScore(points) {
+        this.score += points;
+    }
     
     drawPlayer(player) {
         if (player) {
@@ -31,6 +35,7 @@ export class GameView {
                 case 'clean': this.ctx.fillStyle = 'lightgreen'; break;
                 case 'plain': this.ctx.fillStyle = 'gray'; break;
                 case 'dirty': this.ctx.fillStyle = 'brown'; break;
+                case 'dirtysp': this.ctx.fillStyle = 'pink'; break;
             }
             this.ctx.fillRect(furniture.x, furniture.y, furniture.width, furniture.height);
             
@@ -40,5 +45,10 @@ export class GameView {
                 this.ctx.fillText(`Time: ${furniture.cleanTime.toFixed(1)}s`, furniture.x, furniture.y - 10);
             }
         });
+    }
+
+    displayScoreAndTime(time) {
+        this.drawText(`Time: ${time}`, 90, 40, 'white', '30px Arial');
+        this.drawText(`Score: ${this.score}`, 250, 40, 'white', '30px Arial');
     }
 }

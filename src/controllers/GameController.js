@@ -15,8 +15,8 @@ export class GameController {
         this.elapsedTime = 0; // เวลาเริ่มต้น
 
         // สร้างเฟอร์นิเจอร์
-        this.furnitureList.push(new Furniture(200, 300, 100, 50));
-        this.furnitureList.push(new Furniture(400, 300, 100, 50));
+        this.furnitureList.push(new Furniture(200, 300, 100, 50, this.gameView));
+        this.furnitureList.push(new Furniture(400, 300, 100, 50, this.gameView));
 
         // ส่งข้อมูลเฟอร์นิเจอร์ไปที่ GameView
         this.gameView.furnitureList = this.furnitureList;
@@ -41,19 +41,6 @@ export class GameController {
 
         this.gameView.canvas.addEventListener('mouseup', () => {
             this.isCleaning = false;  // หยุดทำความสะอาดเมื่อปล่อย
-        });
-    }
-
-    handleCleaning(event) {
-        const mouseX = event.clientX - this.gameView.canvas.offsetLeft;
-        const mouseY = event.clientY - this.gameView.canvas.offsetTop;
-
-        // ตรวจสอบว่าเฟอร์นิเจอร์ตัวไหนอยู่ใกล้คลิก
-        this.furnitureList.forEach(furniture => {
-            if (mouseX >= furniture.x && mouseX <= furniture.x + furniture.width &&
-                mouseY >= furniture.y && mouseY <= furniture.y + furniture.height) {
-                    furniture.clean();  // ทำความสะอาดเฟอร์นิเจอร์
-                }
         });
     }
 
@@ -84,16 +71,21 @@ export class GameController {
     gameLoop() {
         const now = Date.now();
         this.elapsedTime = now - this.startTime;
-    
+        
+        // อัพเดตเวลาและคะแนนที่หน้าจอ
+        const formattedTime = formatTime(this.elapsedTime);
+        // คำนวณคะแนนจากเวลา
+        this.timeCount = Math.floor(this.elapsedTime / 60000);
+        console.log("Count : " + this.timeCount)
+
         this.gameView.clearCanvas();
         this.gameView.drawFurniture(this.furnitureList); // วาดเฟอร์นิเจอร์
         this.handlePlayerActions();
         this.gameView.drawPlayer(this.player); // วาดผู้เล่น
         this.furnitureList.forEach(furniture => furniture.update(this.gameView)); // วาดข้อความแจ้งเตือน
         
-        const formattedTime = formatTime(this.elapsedTime);
-        this.gameView.drawText(`Time: ${formattedTime}`, 60, 20, 'white', '18px Arial');
-    
+        this.gameView.displayScoreAndTime(formattedTime);
+
         requestAnimationFrame(() => this.gameLoop());
     }
     
