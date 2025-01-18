@@ -10,7 +10,7 @@ export class GameView {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    drawText(text, x, y, color = 'yellow', font = '16px Arial') {
+    drawText(text, x, y, color, font = '16px Arial') {
         this.ctx.fillStyle = color;
         this.ctx.font = font;
         this.ctx.textAlign = 'center'; 
