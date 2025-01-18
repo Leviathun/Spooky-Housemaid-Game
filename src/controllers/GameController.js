@@ -2,6 +2,7 @@ import { GameView } from '../views/GameView.js';
 import { Player } from '../models/Player.js';
 import { Furniture } from '../models/Furniture.js';
 import { InputController } from '../controllers/InputController.js';
+import { formatTime } from '../utils/TimeUtils.js';
 
 export class GameController {
     constructor() {
@@ -57,12 +58,12 @@ export class GameController {
     }
 
     handlePlayerActions() {
-        // ตรวจสอบการเคลื่อนที่ (ใช้ inputController)
-        if (this.inputController.isKeyPressed('a') && this.player.x > 0) {  // เคลื่อนที่ไปทางซ้าย
-            this.player.x -= 5; // เคลื่อนที่ซ้าย
+        // ตรวจสอบการเคลื่อนที่
+        if (this.inputController.isKeyPressed('a') || this.inputController.isKeyPressed('ฟ')) {
+            this.player.moveLeft();
         }
-        if (this.inputController.isKeyPressed('d') && this.player.x + this.player.width < this.gameView.canvas.width) {  // เคลื่อนที่ไปทางขวา
-            this.player.x += 5; // เคลื่อนที่ขวา
+        if (this.inputController.isKeyPressed('d') || this.inputController.isKeyPressed('ก')) {
+            this.player.moveRight();
         }
     
         // ตรวจสอบการทำความสะอาด (ถ้ากดค้างเมาส์)
@@ -79,32 +80,22 @@ export class GameController {
             });
         }
     }
-
-    formatTime(milliseconds) {
-        const totalSeconds = Math.floor(milliseconds / 1000);
-        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-        const seconds = String(totalSeconds % 60).padStart(2, '0');
-        return `${minutes}:${seconds}`;
-    }
-    
+        
     gameLoop() {
         const now = Date.now();
         this.elapsedTime = now - this.startTime;
     
-        // จัดการฟังก์ชันอื่น ๆ
-        this.handlePlayerActions();
         this.gameView.clearCanvas();
-        this.gameView.drawPlayer(this.player);
-        this.gameView.drawFurniture(this.furnitureList);
-    
-        // วาดเวลา
-        const formattedTime = this.formatTime(this.elapsedTime);
-        this.gameView.drawText(`Time: ${formattedTime}`, 10, 20, 'white', '18px Arial');
-    
-        // อัปเดตสถานะของเฟอร์นิเจอร์
-        this.furnitureList.forEach(furniture => furniture.update(this.gameView));
+        this.gameView.drawFurniture(this.furnitureList); // วาดเฟอร์นิเจอร์
+        this.handlePlayerActions();
+        this.gameView.drawPlayer(this.player); // วาดผู้เล่น
+        this.furnitureList.forEach(furniture => furniture.update(this.gameView)); // วาดข้อความแจ้งเตือน
+        
+        const formattedTime = formatTime(this.elapsedTime);
+        this.gameView.drawText(`Time: ${formattedTime}`, 60, 20, 'white', '18px Arial');
     
         requestAnimationFrame(() => this.gameLoop());
     }
+    
     
 }
