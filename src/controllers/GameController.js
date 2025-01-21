@@ -7,7 +7,7 @@ import { formatTime } from '../utils/TimeUtils.js';
 export class GameController {
     constructor() {
         this.gameView = new GameView();
-        this.player = new Player();
+        this.player = new Player(this.gameView, 500, 600);
         this.inputController = new InputController();
         this.furnitureList = [];
         this.isCleaning = false;
@@ -15,8 +15,8 @@ export class GameController {
         this.elapsedTime = 0; // เวลาเริ่มต้น
 
         // สร้างเฟอร์นิเจอร์
-        this.furnitureList.push(new Furniture(200, 300, 100, 50, this.gameView));
-        this.furnitureList.push(new Furniture(400, 300, 100, 50, this.gameView));
+        this.furnitureList.push(new Furniture(200, 550, 200, 250, this.gameView));
+        this.furnitureList.push(new Furniture(600, 550, 200, 250, this.gameView));
 
         // ส่งข้อมูลเฟอร์นิเจอร์ไปที่ GameView
         this.gameView.furnitureList = this.furnitureList;
@@ -32,25 +32,35 @@ export class GameController {
     addEventListeners() {
         this.gameView.canvas.addEventListener('mousedown', (e) => {
             if (e.button === 0) { // คลิกซ้าย
+                this.player.stop();
                 this.isCleaning = true;
+                this.player.attack();
             } else if (e.button === 2) { // คลิกขวา
                 this.isCleaning = false;
-                this.handleRightClick(e); // ฟังก์ชันทำความสะอาดเมื่อคลิกขวา
             }
         });
-
+    
+        // หยุดทำความสะอาดเมื่อปล่อย
         this.gameView.canvas.addEventListener('mouseup', () => {
-            this.isCleaning = false;  // หยุดทำความสะอาดเมื่อปล่อย
+            this.isCleaning = false; 
+            this.player.stopAttack();
         });
     }
 
     handlePlayerActions() {
-        // ตรวจสอบการเคลื่อนที่
+        let isMoving = false;
+    
         if (this.inputController.isKeyPressed('a') || this.inputController.isKeyPressed('ฟ')) {
             this.player.moveLeft();
+            isMoving = true;
         }
         if (this.inputController.isKeyPressed('d') || this.inputController.isKeyPressed('ก')) {
             this.player.moveRight();
+            isMoving = true;
+        }
+    
+        if (!isMoving && !this.player.isAttacking) {
+            this.player.stop();
         }
     
         // ตรวจสอบการทำความสะอาด (ถ้ากดค้างเมาส์)
@@ -81,7 +91,10 @@ export class GameController {
         this.gameView.clearCanvas();
         this.gameView.drawFurniture(this.furnitureList); // วาดเฟอร์นิเจอร์
         this.handlePlayerActions();
-        this.gameView.drawPlayer(this.player); // วาดผู้เล่น
+
+        this.player.update();
+        this.player.draw();
+        
         this.furnitureList.forEach(furniture => furniture.update(this.gameView)); // วาดข้อความแจ้งเตือน
         
         this.gameView.displayScoreAndTime(formattedTime);

@@ -2,13 +2,20 @@ export class GameView {
     constructor(canvasId = 'gameCanvas') {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = 800;
-        this.canvas.height = 600;
+        this.canvas.width = 1900;
+        this.canvas.height = 900;
         this.score = 0;
+        this.backgroundImage = new Image();
+        this.backgroundImage.src = 'assets/images/background.png'; // กำหนดเส้นทางไปยังภาพพื้นหลัง
+    
+        this.backgroundImage.onload = () => { // ตรวจสอบว่าภาพโหลดเสร็จสมบูรณ์ก่อนวาด
+            this.ctx.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
+        };
     }
 
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height); // วาดพื้นหลังทุกครั้งที่ clear canvas
     }
 
     drawText(text, x, y, color, font = '16px Arial') {
@@ -41,14 +48,14 @@ export class GameView {
             
             if (furniture.status !== 'clean') {
                 this.ctx.fillStyle = 'white';
-                this.ctx.font = '12px Arial';
-                this.ctx.fillText(`Time: ${furniture.cleanTime.toFixed(1)}s`, furniture.x, furniture.y - 10);
+                this.ctx.font = '20px Arial';
+                this.ctx.fillText(`Time: ${furniture.cleanTime.toFixed(1)}s`, furniture.x + 100, furniture.y - 10);
             }
         });
     }
 
     displayScoreAndTime(time) {
-        this.drawText(`Time: ${time}`, 90, 40, 'white', '30px Arial');
-        this.drawText(`Score: ${this.score}`, 250, 40, 'white', '30px Arial');
+        this.drawText(`Time: ${time}`, 150, 50, 'white', '50px Arial');
+        this.drawText(`Score: ${this.score}`, 400, 50, 'white', '50px Arial');
     }
 }
