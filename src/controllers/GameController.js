@@ -7,7 +7,7 @@ import { formatTime } from '../utils/TimeUtils.js';
 export class GameController {
     constructor() {
         this.gameView = new GameView();
-        this.player = new Player(this.gameView, 500, 600);
+        this.player = new Player(this.gameView, 500, 500);
         this.inputController = new InputController();
         this.furnitureList = [];
         this.isCleaning = false;
@@ -15,8 +15,8 @@ export class GameController {
         this.elapsedTime = 0; // เวลาเริ่มต้น
 
         // สร้างเฟอร์นิเจอร์
-        this.furnitureList.push(new Furniture(200, 550, 200, 250, this.gameView));
-        this.furnitureList.push(new Furniture(600, 550, 200, 250, this.gameView));
+        this.furnitureList.push(new Furniture(200, 550, 250, 250, this.gameView));
+        this.furnitureList.push(new Furniture(600, 550, 250, 250, this.gameView));
 
         // ส่งข้อมูลเฟอร์นิเจอร์ไปที่ GameView
         this.gameView.furnitureList = this.furnitureList;
@@ -89,13 +89,18 @@ export class GameController {
         console.log("Count : " + this.timeCount)
 
         this.gameView.clearCanvas();
-        this.gameView.drawFurniture(this.furnitureList); // วาดเฟอร์นิเจอร์
+        
+        // วาดเฟอร์นิเจอร์และอัพเดต
+        this.furnitureList.forEach(furniture => {
+            furniture.updateTick();
+            furniture.draw(this.gameView.ctx);
+            furniture.update(this.gameView);
+        });
+
         this.handlePlayerActions();
 
         this.player.update();
         this.player.draw();
-        
-        this.furnitureList.forEach(furniture => furniture.update(this.gameView)); // วาดข้อความแจ้งเตือน
         
         this.gameView.displayScoreAndTime(formattedTime);
 

@@ -29,14 +29,14 @@ export class GameView {
         this.score += points;
     }
     
-    drawPlayer(player) {
+    /*drawPlayer(player) {
         if (player) {
             this.ctx.fillStyle = 'white';
             this.ctx.fillRect(player.x, player.y, player.width, player.height);
         }
-    }
+    }*/
 
-    drawFurniture(furnitureList) {
+    /*drawFurniture(furnitureList) {
         furnitureList.forEach(furniture => {
             switch (furniture.status) {
                 case 'clean': this.ctx.fillStyle = 'lightgreen'; break;
@@ -52,7 +52,7 @@ export class GameView {
                 this.ctx.fillText(`Time: ${furniture.cleanTime.toFixed(1)}s`, furniture.x + 100, furniture.y - 10);
             }
         });
-    }
+    }*/
 
     displayScoreAndTime(time) {
         this.drawText(`Time: ${time}`, 150, 50, 'white', '50px Arial');

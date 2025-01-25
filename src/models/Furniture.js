@@ -19,12 +19,122 @@ export class Furniture {
         this.width = width;
         this.height = height;
         this.gameView = gameView;
+
+        // ตัวแปรควบคุมความเร็วอนิเมชั่น
+        this.tickCount = 0;
+        this.ticksPerFrame = 10; // อัพเดตเฟรมทุกๆ 10 ticks
+
+        // ตัวแปรควบคุมอนิเมชั่น
+        this.imagesLoaded = 0;
+        this.totalImages = 4; // จำนวนภาพทั้งหมด
+        this.sprites = {
+            Idle: {
+                img: new Image(),
+                frames: 7,
+                currentFrame: 0
+            },
+            Stun: {
+                img: new Image(),
+                frames: 18,
+                currentFrame: 0
+            },
+            Die: {
+                img: new Image(),
+                frames: 15,
+                currentFrame: 0
+            },
+            Hit: {
+                img: new Image(),
+                frames: 5,
+                currentFrame: 0
+            }
+        };
+        this.currentSprite = 'Idle';
+        this.loadSprites();
+
         this.status = 'dirty'; // ตั้งสถานะเริ่มต้นเป็น dirty
+
         this.cleanTime = 1200; // เวลาที่ต้องใช้ในการทำความสะอาดของสถานะเริ่มต้น
         this.timeUntilChange = this.getRandomChangeTime(); // เวลาที่จะใช้ก่อนเปลี่ยนสถานะ
         this.changeNotificationTime = 7000; // เวลาก่อนการเปลี่ยนสถานะที่จะเริ่มแจ้งเตือน
         this.isNotified = false; // ใช้ตรวจสอบว่าได้แจ้งเตือนหรือยัง
     }
+
+    loadSprites() {
+        Object.keys(this.sprites).forEach(key => {
+            this.sprites[key].img.onload = () => {
+                this.imagesLoaded++;
+                if (this.imagesLoaded === this.totalImages) {
+                    this.readyToDraw = true;
+                }
+            };
+            this.sprites[key].img.src = `assets/images/mushroom/Mushroom-${key}.png`;
+        });
+    }
+
+    updateTick() {
+        this.tickCount++;
+        if (this.tickCount > this.ticksPerFrame) {
+            this.tickCount = 0;
+            this.sprites[this.currentSprite].currentFrame = (this.sprites[this.currentSprite].currentFrame + 1) % this.sprites[this.currentSprite].frames;
+        }
+    }    
+
+    draw(ctx) {
+        if (!this.readyToDraw) return; // ตรวจสอบว่ารูปภาพถูกโหลดครบทั้งหมดและพร้อมสำหรับการวาดหรือไม่
+    
+        // ตรวจสอบการตั้งค่าสถานะให้ตรงกับ currentSprite
+        this.updateCurrentSprite();
+        if (this.status !== 'clean') {
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Time: ${this.cleanTime.toFixed(1)}s`, this.x + 100, this.y - 10);
+        }
+    
+        const sprite = this.sprites[this.currentSprite];
+        if (!sprite.img.complete) { // ตรวจสอบว่ารูปภาพถูกโหลดเสร็จสมบูรณ์แล้วหรือไม่
+            return; // หากยังไม่โหลดเสร็จ ออกจากฟังก์ชัน
+        }
+    
+        const frameWidth = sprite.img.width / sprite.frames;
+        const frameHeight = sprite.img.height;
+        ctx.drawImage(
+            sprite.img,
+            sprite.currentFrame * frameWidth, 0,
+            frameWidth, frameHeight,
+            this.x, this.y,
+            this.width, this.height
+        );
+
+        // Draw hit box for debugging
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+    }
+    
+    updateCurrentSprite() {
+        // อัพเดต this.currentSprite ตามสถานะปัจจุบันของเฟอร์นิเจอร์
+        switch (this.status) {
+            case 'dirty':
+                this.currentSprite = 'Idle';
+                break;
+            case 'plain':
+                this.currentSprite = 'Stun';
+                break;
+            case 'clean':
+                this.currentSprite = 'Die';
+                break;
+            case 'dirtysp':
+                this.currentSprite = 'Hit';
+                break;
+        }
+    }
+    
+
+
+
+
+
+
 
     update(gameView) {
         if (this.status !== 'dirty' && this.timeUntilChange > 0) {

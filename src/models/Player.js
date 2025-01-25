@@ -7,8 +7,8 @@ export class Player {
         // ตัวแปรควบคุมลักษณะผู้เล่น
         this.x = x; 
         this.y = y;
-        this.width = 200; 
-        this.height = 200;
+        this.width = 300; 
+        this.height = 300;
         this.speed = 5; 
         
         // ตัวแปรควบคุมสถานะตัวละครหลัก 
@@ -57,7 +57,7 @@ export class Player {
             this.sprites[key].img.src = `assets/images/character/Character-${key}.png`;
         });
     }
-ก
+
     update() {
         this.tickCount++;
         if (this.tickCount > this.ticksPerFrame) {
