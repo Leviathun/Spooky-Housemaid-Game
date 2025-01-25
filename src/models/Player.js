@@ -9,7 +9,11 @@ export class Player {
         this.y = y;
         this.width = 300; 
         this.height = 300;
-        this.speed = 5; 
+        this.speed = 5;
+
+        //  hit box
+        this.hitBoxWidth = 150;  
+        this.hitBoxHeight = 200;  
         
         // ตัวแปรควบคุมสถานะตัวละครหลัก 
         this.isHiding = false;
@@ -90,7 +94,9 @@ export class Player {
 
             // วาด hit box
             this.ctx.strokeStyle = 'red'; // สีแดงสำหรับ hit box
-            this.ctx.strokeRect(this.x, this.y, this.width, this.height); // วาดกรอบ hit box
+            const hitBoxX = this.x + (this.width - this.hitBoxWidth) / 2;
+            const hitBoxY = this.y + (this.height - this.hitBoxHeight) / 2;
+            this.ctx.strokeRect(hitBoxX, hitBoxY, this.hitBoxWidth, this.hitBoxHeight); // วาดกรอบ hit box
 
             // Debug: แสดงพิกัด
             this.ctx.fillStyle = 'white';
@@ -109,7 +115,9 @@ export class Player {
 
             // วาด hit box
             this.ctx.strokeStyle = 'red'; // สีแดงสำหรับ hit box
-            this.ctx.strokeRect(this.x, this.y, this.width, this.height); // วาดกรอบ hit box
+            const hitBoxX = this.x + (this.width - this.hitBoxWidth) / 2;
+            const hitBoxY = this.y + (this.height - this.hitBoxHeight) / 2;
+            this.ctx.strokeRect(hitBoxX, hitBoxY, this.hitBoxWidth, this.hitBoxHeight); // วาดกรอบ hit box
 
             // Debug: แสดงพิกัด
             this.ctx.fillStyle = 'white';

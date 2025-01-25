@@ -66,11 +66,14 @@ export class GameController {
         // ตรวจสอบการทำความสะอาด (ถ้ากดค้างเมาส์)
         if (this.isCleaning) {
             this.furnitureList.forEach(furniture => {
-                // ตรวจสอบว่าผู้เล่นอยู่ใกล้เฟอร์นิเจอร์หรือไม่
-                if (this.player.x < furniture.x + furniture.width &&
-                    this.player.x + this.player.width > furniture.x &&
-                    this.player.y < furniture.y + furniture.height &&
-                    this.player.y + this.player.height > furniture.y) {
+                const playerHitBoxX = this.player.x + (this.player.width - this.player.hitBoxWidth) / 2;
+                const playerHitBoxY = this.player.y + (this.player.height - this.player.hitBoxHeight) / 2;
+
+                // ตรวจสอบว่าผู้เล่นอยู่ภายในเฟอร์นิเจอร์หรือไม่
+                if (playerHitBoxX >= furniture.x &&
+                    playerHitBoxX + this.player.hitBoxWidth <= furniture.x + furniture.width &&
+                    playerHitBoxY >= furniture.y &&
+                    playerHitBoxY + this.player.hitBoxHeight <= furniture.y + furniture.height) {
                     // เริ่มทำความสะอาดเฟอร์นิเจอร์
                     furniture.clean();
                 }
