@@ -22,7 +22,7 @@ export class Furniture {
 
         // ตัวแปรควบคุมความเร็วอนิเมชั่น
         this.tickCount = 0;
-        this.ticksPerFrame = 10; // อัพเดตเฟรมทุกๆ 10 ticks
+        this.ticksPerFrame = 14; // อัพเดตเฟรมทุกๆ 10 ticks
 
         // ตัวแปรควบคุมอนิเมชั่น
         this.imagesLoaded = 0;

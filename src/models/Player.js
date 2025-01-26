@@ -24,7 +24,7 @@ export class Player {
 
         // ตัวแปรควบคุมความเร็วอนิเมชั่น
         this.tickCount = 0;
-        this.ticksPerFrame = 10; // อัพเดตเฟรมทุกๆ 10 ticks
+        this.ticksPerFrame = 14; // อัพเดตเฟรมทุกๆ 10 ticks
 
         // ตัวแปรควบคุมอนิเมชั่น
         this.imagesLoaded = 0;
@@ -126,24 +126,26 @@ export class Player {
     }
 
     moveLeft() {
-        if (this.isLocked) return; // หยุดการเคลื่อนที่ถ้าล็อค
-        this.isMoving = true;
-        this.x -= this.speed;
-        if (!this.isAttacking) {
-            this.currentSprite = 'run';
-            this.movingLeft = true;
+        const hitBoxEdgeLeft = this.x + (this.width - this.hitBoxWidth) / 2;
+        if (hitBoxEdgeLeft > this.speed) { // ตรวจสอบขอบเขตซ้ายของ canvas
+            this.x -= this.speed;
+            if (!this.isAttacking) {
+                this.currentSprite = 'run';
+                this.movingLeft = true;
+            }
         }
     }
-
+    
     moveRight() {
-        if (this.isLocked) return; // หยุดการเคลื่อนที่ถ้าล็อค
-        this.isMoving = true;
-        this.x += this.speed;
-        if (!this.isAttacking) {
-            this.currentSprite = 'run';
-            this.movingLeft = false;
+        const hitBoxEdgeRight = this.x + this.width - (this.width - this.hitBoxWidth) / 2;
+        if (hitBoxEdgeRight + this.speed < this.canvasWidth) { // ตรวจสอบขอบเขตขวาของ canvas
+            this.x += this.speed;
+            if (!this.isAttacking) {
+                this.currentSprite = 'run';
+                this.movingLeft = false;
+            }
         }
-    }
+    }       
 
     stop() {
         this.isMoving = false;
