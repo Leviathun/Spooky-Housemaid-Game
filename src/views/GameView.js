@@ -11,6 +11,12 @@ export class GameView {
         this.backgroundImage.onload = () => { // ตรวจสอบว่าภาพโหลดเสร็จสมบูรณ์ก่อนวาด
             this.ctx.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
         };
+
+        // กำหนดขนาด canvas ตามขนาดของหน้าต่าง
+        this.resizeCanvas(); // ปรับขนาด canvas
+
+        // ตั้งค่าให้เมื่อหน้าต่างถูกปรับขนาด จะปรับขนาด canvas ด้วย
+        window.addEventListener('resize', () => this.resizeCanvas());
     }
 
     clearCanvas() {
@@ -28,6 +34,14 @@ export class GameView {
     updateScore(points) {
         this.score += points;
     }
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.canvasWidth = this.canvas.width; // อัพเดตความกว้าง canvas ให้กับ player
+        this.canvasHeight = this.canvas.height; // อัพเดตความสูง canvas
+    }
+    
     
     /*drawPlayer(player) {
         if (player) {

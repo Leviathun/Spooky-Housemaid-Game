@@ -1,14 +1,61 @@
-body {
+/* สไตล์พื้นฐานสำหรับหน้าเว็บ */
+body, html {
+  height: 100%;
+  width: 100%;
   margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #282828; /* ตั้งค่าสีพื้นหลังเป็นสีเข้ม */
+  color: #fff; /* สีของข้อความ */
+  display: flex;
+}
+
+#gameContainer {
+  width: 100%;
+  height: 100%;
+  background-image: url('assets/images/Summer.png');
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: black;
+}
+
+#startScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%; /* ตั้งค่าความกว้างของ start screen */
+  max-width: 600px; /* กำหนดความกว้างสูงสุด */
+}
+
+#gameLogo {
+  width: 100%; /* ปรับให้โลโก้ใช้พื้นที่มากขึ้น */
+  max-width: 500px; /* กำหนดความกว้างสูงสุด */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+#startButton {
+  width: 100%; /* ให้ปุ่มขยายเต็มความกว้าง */
+  padding: 20px; /* เพิ่มพื้นที่รอบๆ ข้อความ */
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  font-family: 'Press Start 2P', cursive; /* ใช้ Google Font ที่เหมาะสมกับสไตล์พิกเซล */
+  text-transform: uppercase;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+  border: 3px solid white; /* เพิ่มเส้นขอบสไตล์พิกเซล */
 }
 
 #gameCanvas {
-  border: 2px solid white;
-  display: block; /* ป้องกัน canvas ขยายเอง */
-  background-color: #333;
+  width: 100%;
+  height: 100%;
+  display: none; /* ซ่อน canvas ไว้ก่อนเกมเริ่ม */
+}
+
+#startButton:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: black;
 }
