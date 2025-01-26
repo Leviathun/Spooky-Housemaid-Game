@@ -12,7 +12,7 @@ export class GameController {
         this.furnitureList = [];
         this.isCleaning = false;
         this.startTime = Date.now(); // เวลาเริ่มต้นเกม
-        this.elapsedTime = 0; // เวลาเริ่มต้น
+        this.elapsedTime = 0; // เวลาคำนวณคะแนน
 
         // สร้างเฟอร์นิเจอร์
         this.furnitureList.push(new Furniture(200, 550, 250, 250, this.gameView));

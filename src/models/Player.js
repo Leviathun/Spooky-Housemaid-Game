@@ -24,7 +24,7 @@ export class Player {
 
         // ตัวแปรควบคุมความเร็วอนิเมชั่น
         this.tickCount = 0;
-        this.ticksPerFrame = 14; // อัพเดตเฟรมทุกๆ 10 ticks
+        this.ticksPerFrame = 14; // อัพเดตเฟรมทุกๆ 14 ticks
 
         // ตัวแปรควบคุมอนิเมชั่น
         this.imagesLoaded = 0;
@@ -93,10 +93,10 @@ export class Player {
             this.ctx.restore(); // คืนค่าสถานะ canvas กลับ
 
             // วาด hit box
-            this.ctx.strokeStyle = 'red'; // สีแดงสำหรับ hit box
+            this.ctx.strokeStyle = 'red'; 
             const hitBoxX = this.x + (this.width - this.hitBoxWidth) / 2;
             const hitBoxY = this.y + (this.height - this.hitBoxHeight) / 2;
-            this.ctx.strokeRect(hitBoxX, hitBoxY, this.hitBoxWidth, this.hitBoxHeight); // วาดกรอบ hit box
+            this.ctx.strokeRect(hitBoxX, hitBoxY, this.hitBoxWidth, this.hitBoxHeight); 
 
             // Debug: แสดงพิกัด
             this.ctx.fillStyle = 'white';
@@ -114,10 +114,10 @@ export class Player {
             );
 
             // วาด hit box
-            this.ctx.strokeStyle = 'red'; // สีแดงสำหรับ hit box
+            this.ctx.strokeStyle = 'red'; 
             const hitBoxX = this.x + (this.width - this.hitBoxWidth) / 2;
             const hitBoxY = this.y + (this.height - this.hitBoxHeight) / 2;
-            this.ctx.strokeRect(hitBoxX, hitBoxY, this.hitBoxWidth, this.hitBoxHeight); // วาดกรอบ hit box
+            this.ctx.strokeRect(hitBoxX, hitBoxY, this.hitBoxWidth, this.hitBoxHeight); 
 
             // Debug: แสดงพิกัด
             this.ctx.fillStyle = 'white';

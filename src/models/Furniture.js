@@ -6,7 +6,7 @@ const STATUS_CHANGE_TIME = {
 };
 
 const CLEAN_TIME = {
-    clean: { min: 0, max: 0 }, //12 วิ
+    clean: { min: 0, max: 0 }, 
     plain: { min: 1000, max: 1000 }, 
     dirty: { min: 1200, max: 1200 }, // dirty ไม่ต้องการเวลาสุ่ม
     dirtysp: { min: 1200, max: 1200 } // dirtysp ไม่ต้องการเวลาสุ่ม
@@ -22,7 +22,7 @@ export class Furniture {
 
         // ตัวแปรควบคุมความเร็วอนิเมชั่น
         this.tickCount = 0;
-        this.ticksPerFrame = 14; // อัพเดตเฟรมทุกๆ 10 ticks
+        this.ticksPerFrame = 14; // อัพเดตเฟรมทุกๆ 14 ticks
 
         // ตัวแปรควบคุมอนิเมชั่น
         this.imagesLoaded = 0;
@@ -129,13 +129,6 @@ export class Furniture {
         }
     }
     
-
-
-
-
-
-
-
     update(gameView) {
         if (this.status !== 'dirty' && this.timeUntilChange > 0) {
             this.timeUntilChange -= 1; // ลดเวลาในแต่ละเกมลูป 
