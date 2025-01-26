@@ -126,6 +126,7 @@ export class Player {
     }
 
     moveLeft() {
+        if (this.isLocked) return; // หยุดการเคลื่อนที่ถ้าล็อค
         const hitBoxEdgeLeft = this.x + (this.width - this.hitBoxWidth) / 2;
         if (hitBoxEdgeLeft > this.speed) { // ตรวจสอบขอบเขตซ้ายของ canvas
             this.x -= this.speed;
@@ -137,6 +138,7 @@ export class Player {
     }
     
     moveRight() {
+        if (this.isLocked) return; // หยุดการเคลื่อนที่ถ้าล็อค
         const hitBoxEdgeRight = this.x + this.width - (this.width - this.hitBoxWidth) / 2;
         if (hitBoxEdgeRight + this.speed < this.canvasWidth) { // ตรวจสอบขอบเขตขวาของ canvas
             this.x += this.speed;
@@ -145,7 +147,7 @@ export class Player {
                 this.movingLeft = false;
             }
         }
-    }       
+    }        
 
     stop() {
         this.isMoving = false;
